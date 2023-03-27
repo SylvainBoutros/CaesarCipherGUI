@@ -6,7 +6,7 @@ class CaesarCipher:
     def __init__(self, root):
         self.root = root
         root.title("Caesar Cipher")
-        root.geometry("750x750")
+        root.geometry("600x600")
         root.resizable(0, 0)
         self.minmax = [x for x in range(0, 26)]
 
