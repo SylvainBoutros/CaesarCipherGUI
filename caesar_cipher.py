@@ -51,31 +51,29 @@ class CaesarCipher:
         self.alphabet = string.ascii_lowercase
 
     def get_message(self, types):
-        self.secret_key = int(self.key.get())
+        secret_key = int(self.key.get())
         self.types = types
+        
+        main_msg_display = self.encrypt_display if self.types == "encrypt" else self.decrypt_display
+        secondary_msg_display = self.decrypt_display if self.types == "encrypt" else self.encrypt_display
 
-        if self.types == "encrypt":
-            self.message = self.encrypt_display.get('1.0', 'end-1c')
-            self.message = self.message.lower()
-            self.results = self.do_magic()
-            self.decrypt_display.insert('1.0', self.results)
-            return
-        self.message = self.decrypt_display.get('1.0', 'end-1c')
-        self.message = self.message.lower()
-        self.results = self.do_magic()
-        self.encrypt_display.insert('1.0', self.results)
-        return
+        msg = main_msg_display.get('1.0', 'end-1c').lower()
+        results = self.do_magic(msg, secret_key)
 
-    def do_magic(self):
+        main_msg_display.delete('1.0', END)
+        secondary_msg_display.delete('1.0', END)
+        secondary_msg_display.insert('1.0', results)
+
+    def do_magic(self, message, s_key):
         results = ''
-        for letter in self.message:
+        for letter in message:
             if letter in self.alphabet:
                 letter_index = self.alphabet.find(letter)
 
                 if self.types == "encrypt":
-                    shifted_index = letter_index + self.secret_key
+                    shifted_index = letter_index + s_key
                 elif self.types == "decrypt":
-                    shifted_index = letter_index - self.secret_key
+                    shifted_index = letter_index - s_key
 
                 if shifted_index >= len(self.alphabet):
                     shifted_index -= len(self.alphabet)
